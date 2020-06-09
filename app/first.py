@@ -1,18 +1,42 @@
+import os
 import math
 import json
 import pygame
+import consts
 
-# 曲の長さを取得
-music_path = r"C:\var\developments\BSNorts\tmp\Wish upon Twin Stars - That_One_Narwhal\Wish.egg"
-pygame.mixer.init()
-sc = pygame.mixer.Sound(music_path)
-music_len = sc.get_length()
 
-# ノーツの数を取得
-dat_path: str = r"C:\var\developments\BSNorts\data\Wish upon Twin Stars - That_One_Narwhal\ExpertStandard.dat"
-with open(dat_path, "r") as fp:
-    map_: dict = json.load(fp)
-notes_count = len(map_.get('_notes'))
+def get_music_length():
+    # 曲の長さを取得
+    music_path = os.path.join(
+        consts.DATA_DIR,
+        r"Wish upon Twin Stars - That_One_Narwhal",
+        r"Wish.egg"
+    )
+    pygame.mixer.init()
+    sc = pygame.mixer.Sound(music_path)
+    return sc.get_length()
 
-# notes per sec
-print(math.floor(notes_count/music_len * 100) / 100)
+
+def get_notes_count():
+    # ノーツの数を取得
+    dat_path = os.path.join(
+        consts.DATA_DIR,
+        r"Wish upon Twin Stars - That_One_Narwhal",
+        r"ExpertStandard.dat",
+    )
+    with open(dat_path, "r") as fp:
+        map_ = json.load(fp)
+    return len(map_.get("_notes"))
+
+
+def get_nps():
+    # notes per sec
+    return math.floor(get_notes_count() / get_music_length() * 100) / 100
+
+
+def main():
+    print(get_nps())
+
+
+if __name__ == "__main__":
+    main()
